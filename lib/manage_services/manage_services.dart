@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:gomedserv/dashboard_screen.dart';
-import 'package:gomedserv/manageusers_screen.dart';
+import 'package:gomedserv/home/dashboard_screen.dart';
+import 'package:gomedserv/manage_services/add_service.dart';
+import 'package:gomedserv/manage_users/manageusers_screen.dart';
+import 'package:gomedserv/widgets/topbar.dart';
 
-class ManageUsersScreen extends StatefulWidget {
+class ManageServices extends StatefulWidget {
   @override
-  _ManageUsersScreenState createState() => _ManageUsersScreenState();
+  _ManageServicesState createState() => _ManageServicesState();
 }
 
-class _ManageUsersScreenState extends State<ManageUsersScreen> {
+class _ManageServicesState extends State<ManageServices> {
   String searchQuery = '';
 
   @override
@@ -25,7 +27,12 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              _buildTopBar(context),
+              TopBar(
+                title: 'Manage Services',
+                onBackPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
               SizedBox(height: 5),
               _buildSearchBar(),
               SizedBox(height: 2), // Space between search bar and row
@@ -57,74 +64,52 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Text(
-            'Users List',
+            'Service Catalog',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
-          TextButton(
-            onPressed: () {
-              // Implement deactivate functionality
+          Spacer(),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddServiceScreen(),
+                ),
+              );
             },
             child: const Text(
-              'Deactivate',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+              "Add Service",
+              style: TextStyle(
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+          const SizedBox(width: 16), // Add some spacing between the buttons
+          GestureDetector(
+            onTap: () {},
+            child: const Text(
+              "Edit",
+              style: TextStyle(
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+          const SizedBox(width: 16), // Add some spacing between the buttons
+          GestureDetector(
+            onTap: () {},
+            child: const Text(
+              "Delete",
+              style: TextStyle(
+                decoration: TextDecoration.underline,
+              ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildTopBar(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.1,
-      decoration: const BoxDecoration(
-        color: Color(0xFFD2F1E4),
-        borderRadius: BorderRadius.only(
-          bottomRight: Radius.circular(50),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new,
-                    size: 28,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                const Text(
-                  'Manage Users',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            IconButton(
-              icon: const Icon(
-                Icons.notifications,
-                size: 28,
-              ),
-              onPressed: () {
-                // Handle notification button press
-              },
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gomedserv/widgets/topbar.dart';
-import 'package:gomedserv/manageusers_screen.dart';
-import 'package:gomedserv/dashboard_screen.dart';
+import 'package:gomedserv/manage_users/manageusers_screen.dart';
+import 'package:gomedserv/home/dashboard_screen.dart';
+import 'package:gomedserv/widgets/custom_button.dart';
 
 class UserProfileScreen extends StatelessWidget {
   final User user;
@@ -182,7 +183,14 @@ class UserProfileScreen extends StatelessWidget {
               const SizedBox(
                 height: 60,
               ),
-              _buildSaveButton(360),
+              CustomButton(
+                text: 'Deactivate Account',
+                color: Colors.red,
+                screenWidth: MediaQuery.of(context).size.width,
+                onTap: () {
+                  // Add your onTap logic here
+                },
+              ),
             ],
           ),
         ),
@@ -195,26 +203,6 @@ class UserProfileScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-Widget _buildSaveButton(double screenWidth) {
-  return GestureDetector(
-    child: Container(
-      margin: const EdgeInsets.symmetric(horizontal: 15),
-      decoration: BoxDecoration(
-        color: Colors.red,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      height: 50,
-      width: screenWidth,
-      child: const Center(
-        child: Text(
-          'Deactivate Account',
-          style: TextStyle(color: Colors.white, fontSize: 18),
-        ),
-      ),
-    ),
-  );
 }
 
 class UserProfile {

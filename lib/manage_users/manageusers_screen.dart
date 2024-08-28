@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gomedserv/dashboard_screen.dart';
-import 'package:gomedserv/user_profile.dart';
+import 'package:gomedserv/home/dashboard_screen.dart';
+import 'package:gomedserv/Manage_users/user_profile.dart';
+import 'package:gomedserv/widgets/topbar.dart';
 
 class User {
   final String id;
@@ -102,7 +103,12 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              _buildTopBar(context),
+              TopBar(
+                title: 'Manage Users',
+                onBackPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
               SizedBox(height: 5),
               _buildSearchBar(),
               SizedBox(height: 2), // Space between search bar and row
@@ -143,65 +149,17 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          TextButton(
-            onPressed: () {
-              // Implement deactivate functionality
-            },
-            child: const Text(
-              'Deactivate',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+          GestureDetector(
+            onTap: () {},
+            child: Text(
+              "Deactivate",
+              style: TextStyle(
+                decoration: TextDecoration.underline,
+              ),
+              selectionColor: Colors.black,
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildTopBar(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.1,
-      decoration: const BoxDecoration(
-        color: Color(0xFFD2F1E4),
-        borderRadius: BorderRadius.only(
-          bottomRight: Radius.circular(50),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_ios_new,
-                    size: 28,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                const Text(
-                  'Manage Users',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-            IconButton(
-              icon: const Icon(
-                Icons.notifications,
-                size: 28,
-              ),
-              onPressed: () {
-                // Handle notification button press
-              },
-            ),
-          ],
-        ),
       ),
     );
   }

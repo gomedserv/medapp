@@ -286,7 +286,8 @@
 // }
 
 import 'package:flutter/material.dart';
-import 'package:gomedserv/manageusers_screen.dart';
+import 'package:gomedserv/manage_services/manage_services.dart';
+import 'package:gomedserv/manage_users/manageusers_screen.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
@@ -409,8 +410,13 @@ class DashboardScreen extends StatelessWidget {
             context,
             MaterialPageRoute(builder: (context) => ManageUsersScreen()),
           );
+        } else if (title == 'Manage Services') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ManageServices()),
+          );
         }
-        // Add more conditions if you want to navigate to other screens
+        // Add other navigation cases if needed
       },
       child: Container(
         width: 80,
