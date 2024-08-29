@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gomedserv/notification_screen.dart';
 
 class TopBar extends StatelessWidget {
   final String title;
@@ -48,7 +49,10 @@ class TopBar extends StatelessWidget {
                 size: 28,
               ),
               onPressed: () {
-                // Handle notification button press
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NotificationScreen()),
+                );
               },
             ),
           ],

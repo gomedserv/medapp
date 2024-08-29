@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gomedserv/home/dashboard_screen.dart';
-import 'package:gomedserv/Manage_users/user_profile.dart';
+import 'package:gomedserv/user_management/user_profile.dart';
 import 'package:gomedserv/widgets/topbar.dart';
 
 class User {
@@ -188,50 +188,50 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
   }
 
   Widget _buildUserList(List<User> users) {
-    return ListView.builder(
-      shrinkWrap: true,
-      padding: EdgeInsets.zero,
-      itemCount: users.length,
-      itemBuilder: (context, index) {
-        final user = users[index];
-        return Card(
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          elevation: 4,
-          margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
-          child: ListTile(
-            title: Text(
-              "${user.username ?? "No Name"}",
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+    return Container(
+      height: 500, // Adjust the height as per your need
+      child: ListView.builder(
+        padding: EdgeInsets.zero,
+        itemCount: users.length,
+        itemBuilder: (context, index) {
+          final user = users[index];
+          return Card(
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            elevation: 4,
+            margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
+            child: ListTile(
+              title: Text(
+                "${user.username ?? "No Name"}",
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "${user.email ?? "No Email"}",
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                ),
-                Text(
-                  "${user.date ?? "No Date"}",
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "${user.email ?? "No Email"}",
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
                   ),
-                ),
-              ],
-            ),
-            trailing: Container(
-              child: Column(
+                  Text(
+                    "${user.date ?? "No Date"}",
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              trailing: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -246,27 +246,21 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  // IconButton(
-                  //   icon: const Icon(
-                  //     Icons.edit,
-                  //   ),
-                  //   onPressed: () {},
-                  // ),
                 ],
               ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => UserProfileScreen(
+                            user: user,
+                          )),
+                );
+              },
             ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => UserProfileScreen(
-                          user: user,
-                        )),
-              );
-            },
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
