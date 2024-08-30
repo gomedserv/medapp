@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gomedserv/widgets/topbar.dart';
 import 'package:gomedserv/widgets/custom_button.dart';
-import 'package:gomedserv/home/dashboard_screen.dart';
+// import 'package:gomedserv/home/dashboard_screen.dart';
+import 'package:gomedserv/widgets/bottomnavigation.dart';
 
 class PaymentScreen extends StatefulWidget {
   final String username;
@@ -238,10 +239,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
           currentIndex: 2,
           onTap: (index) {
             // Handle navigation based on selected index
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => DashboardScreen()),
-            );
+            // Navigator.pushReplacement(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => DashboardScreen()),
+            // );
           },
         ),
       ),

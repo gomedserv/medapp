@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gomedserv/widgets/topbar.dart';
 import 'package:gomedserv/user_management/manageusers_screen.dart';
-import 'package:gomedserv/home/dashboard_screen.dart';
+import 'package:gomedserv/widgets/bottomnavigation.dart';
 import 'package:gomedserv/widgets/custom_button.dart';
 
 class UserProfileScreen extends StatelessWidget {

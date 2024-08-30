@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gomedserv/widgets/topbar.dart';
 import 'package:gomedserv/widgets/custom_button.dart';
-import 'package:gomedserv/home/dashboard_screen.dart'; // Assuming you have this widget
+import 'package:gomedserv/widgets/bottomnavigation.dart';
+import 'package:intl/intl.dart';
 
 class AddServiceScreen extends StatefulWidget {
   @override
@@ -15,6 +16,9 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   final TextEditingController _priceController = TextEditingController();
 
   String? _selectedCategory;
+  String? _selectedAvailability;
+  DateTime? _selectedDate;
+
   final List<String> _categories = [
     'Plumbing',
     'Electrical',
@@ -172,6 +176,62 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                           return null;
                         },
                       ),
+
+                      SizedBox(height: 20),
+                      Text('Availability'),
+                      Row(
+                        children: [
+                          Radio<String>(
+                            value: 'Everyday',
+                            groupValue: _selectedAvailability,
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedAvailability = value;
+                              });
+                            },
+                          ),
+                          Text('Everyday'),
+                          Radio<String>(
+                            value: 'EveryWeek',
+                            groupValue: _selectedAvailability,
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedAvailability = value;
+                              });
+                            },
+                          ),
+                          Text('EveryWeek'),
+                          Radio<String>(
+                            value: 'Weekends',
+                            groupValue: _selectedAvailability,
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedAvailability = value;
+                              });
+                            },
+                          ),
+                          Text('Weekends'),
+                          Radio<String>(
+                            value: 'Custom',
+                            groupValue: _selectedAvailability,
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedAvailability = value;
+                                _showDatePicker();
+                              });
+                            },
+                          ),
+                          Text('Custom'),
+                        ],
+                      ),
+                      if (_selectedDate != null)
+                        Text(
+                          'Selected Date: ${DateFormat('yyyy-MM-dd').format(_selectedDate!)}',
+                        ),
+                      ElevatedButton(
+                        onPressed: _showDatePicker,
+                        child: Text('Select Date'),
+                      ),
                       SizedBox(height: 30), // Add spacing before the button
                       CustomButton(
                         text: 'Add Service',
@@ -179,7 +239,39 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                         screenWidth: screenWidth,
                         onTap: () {
                           if (_formKey.currentState!.validate()) {
-                            // Add your onTap logic here
+                            // Perform any additional logic here like API call to add the service
+
+                            // Show the dialog box after successfully adding the service
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  backgroundColor: Color(0xFF2A9D8F),
+                                  title: Text(
+                                    'Success',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  content: Text(
+                                    'Service successfully added.',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      child: Text('OK'),
+                                      onPressed: () {
+                                        Navigator.of(context)
+                                            .pop(); // Close the dialog
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           }
                         },
                       ),
@@ -206,5 +298,19 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
     _descriptionController.dispose();
     _priceController.dispose();
     super.dispose();
+  }
+
+  void _showDatePicker() async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (pickedDate != null && pickedDate != _selectedDate) {
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    }
   }
 }

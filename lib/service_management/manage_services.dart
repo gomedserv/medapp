@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gomedserv/home/dashboard_screen.dart';
+import 'package:gomedserv/widgets/bottomnavigation.dart';
 import 'package:gomedserv/service_management/add_service.dart';
 import 'package:gomedserv/user_management/manageusers_screen.dart';
 import 'package:gomedserv/widgets/topbar.dart';
@@ -91,7 +91,17 @@ class _ManageServicesState extends State<ManageServices> {
           ),
           const SizedBox(width: 16), // Add some spacing between the buttons
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => AvailabilityField(
+              //       onDateChanged: (DateTime value) {},
+              //       initialDate: DateTime.now(),
+              //     ),
+              //   ),
+              // );
+            },
             child: const Text(
               "Edit",
               style: TextStyle(
