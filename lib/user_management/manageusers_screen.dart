@@ -2,83 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gomedserv/widgets/bottomnavigation.dart';
 import 'package:gomedserv/user_management/user_profile.dart';
 import 'package:gomedserv/widgets/topbar.dart';
-
-class User {
-  final String id;
-  final String? profilePic;
-  final String? username;
-  final String? email;
-  final String? date;
-  final String? status;
-
-  User({
-    required this.id,
-    this.profilePic,
-    this.username,
-    this.email,
-    this.date,
-    this.status,
-  });
-}
-
-final List<User> usersData = [
-  User(
-      id: '1',
-      profilePic: 'assets/images/avatar1.png',
-      username: 'John Doe',
-      email: 'john@example.com',
-      date: '24/02/2024',
-      status: 'Active'),
-  User(
-      id: '2',
-      profilePic: 'assets/images/avatar2.png',
-      username: 'Jane Smith',
-      email: 'jane@example.com',
-      date: '19/02/2024',
-      status: 'Deactive'),
-  User(
-      id: '3',
-      profilePic: 'assets/images/avatar1.png',
-      username: 'John Doe',
-      email: 'john@example.com',
-      date: '24/02/2024',
-      status: 'Active'),
-  User(
-      id: '4',
-      profilePic: 'assets/images/avatar2.png',
-      username: 'Jane Smith',
-      email: 'jane@example.com',
-      date: '19/02/2024',
-      status: 'Deactive'),
-  User(
-      id: '5',
-      profilePic: 'assets/images/avatar1.png',
-      username: 'John Doe',
-      email: 'john@example.com',
-      date: '24/02/2024',
-      status: 'Active'),
-  User(
-      id: '6',
-      profilePic: 'assets/images/avatar2.png',
-      username: 'Jane Smith',
-      email: 'jane@example.com',
-      date: '19/02/2024',
-      status: 'Deactive'),
-  User(
-      id: '7',
-      profilePic: 'assets/images/avatar2.png',
-      username: 'Jane Smith',
-      email: 'jane@example.com',
-      date: '19/02/2024',
-      status: 'Deactive'),
-  User(
-      id: '8',
-      profilePic: 'assets/images/avatar2.png',
-      username: 'Last edhe',
-      email: 'jane@example.com',
-      date: '19/02/2024',
-      status: 'Deactive'),
-];
+import 'package:gomedserv/models/manage_users_model.dart';
 
 class ManageUsersScreen extends StatefulWidget {
   @override
@@ -90,12 +14,20 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+
+    final double paddingHorizontal = screenWidth * 0.04; // 4% of screen width
+    final double topBarHeight = screenHeight * 0.07; // 7% of screen height
+    final double searchBarHeight = screenHeight * 0.06; // 6% of screen height
+    final double listHeight = screenHeight * 0.6; // 60% of screen height
+
     final filteredUsers = usersData
         .where((user) =>
             user.username?.toLowerCase().contains(searchQuery.toLowerCase()) ??
             false ||
-                // user.email?.toLowerCase().contains(searchQuery.toLowerCase()) ??
-                false)
+                user.email!.toLowerCase().contains(searchQuery.toLowerCase()) ??
+            false)
         .toList();
 
     return SafeArea(
@@ -109,20 +41,24 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                   Navigator.pop(context);
                 },
               ),
-              SizedBox(height: 5),
-              _buildSearchBar(),
-              SizedBox(height: 2), // Space between search bar and row
-              _buildUserListRow(context),
+
+              SizedBox(height: screenHeight * 0.01), // 1% of screen height
+              _buildSearchBar(paddingHorizontal, searchBarHeight),
+              SizedBox(
+                  height:
+                      screenHeight * 0.01), // Space between search bar and row
+              _buildUserListRow(paddingHorizontal),
               if (filteredUsers.isEmpty)
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(screenHeight * 0.02),
                   child: Text(
                     'No users found.',
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                    style: TextStyle(
+                        fontSize: screenWidth * 0.04, color: Colors.grey),
                   ),
                 )
               else
-                _buildUserList(filteredUsers),
+                _buildUserList(filteredUsers, listHeight),
             ],
           ),
         ),
@@ -136,16 +72,17 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
     );
   }
 
-  Widget _buildUserListRow(BuildContext context) {
+  Widget _buildUserListRow(double paddingHorizontal) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: EdgeInsets.symmetric(horizontal: paddingHorizontal),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             'Users List',
             style: TextStyle(
-              fontSize: 18,
+              fontSize:
+                  paddingHorizontal * 1.2, // Adjust font size based on padding
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -156,7 +93,6 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
               style: TextStyle(
                 decoration: TextDecoration.underline,
               ),
-              selectionColor: Colors.black,
             ),
           ),
         ],
@@ -164,32 +100,35 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
     );
   }
 
-  Widget _buildSearchBar() {
+  Widget _buildSearchBar(double paddingHorizontal, double searchBarHeight) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: TextField(
-        onChanged: (query) {
-          setState(() {
-            searchQuery = query;
-          });
-        },
-        decoration: InputDecoration(
-          hintText: 'Search by username or email',
-          suffixIcon: const Icon(
-            Icons.search,
-            size: 25,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+      padding: EdgeInsets.symmetric(horizontal: paddingHorizontal),
+      child: SizedBox(
+        height: searchBarHeight,
+        child: TextField(
+          onChanged: (query) {
+            setState(() {
+              searchQuery = query;
+            });
+          },
+          decoration: InputDecoration(
+            hintText: 'Search by username or email',
+            suffixIcon: const Icon(
+              Icons.search,
+              size: 25,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildUserList(List<User> users) {
+  Widget _buildUserList(List<User> users, double listHeight) {
     return Container(
-      height: 500, // Adjust the height as per your need
+      height: listHeight,
       child: ListView.builder(
         padding: EdgeInsets.zero,
         itemCount: users.length,
@@ -205,9 +144,10 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
             child: ListTile(
               title: Text(
                 "${user.username ?? "No Name"}",
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.black,
-                  fontSize: 18,
+                  fontSize: MediaQuery.of(context).size.width *
+                      0.045, // Adjust font size based on screen width
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -223,9 +163,10 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                     "${user.date ?? "No Date"}",
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.black,
-                      fontSize: 14,
+                      fontSize: MediaQuery.of(context).size.width *
+                          0.035, // Adjust font size based on screen width
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -242,7 +183,8 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                     style: TextStyle(
                       color:
                           user.status == 'Active' ? Colors.green : Colors.red,
-                      fontSize: 14,
+                      fontSize: MediaQuery.of(context).size.width *
+                          0.035, // Adjust font size based on screen width
                       fontWeight: FontWeight.bold,
                     ),
                   ),

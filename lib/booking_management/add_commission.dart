@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gomedserv/widgets/topbar.dart';
 import 'package:gomedserv/widgets/custom_button.dart';
-import 'package:gomedserv/widgets/bottomnavigation.dart'; // Assuming you have this widget
+import 'package:gomedserv/widgets/bottomnavigation.dart';
 
 class AddCommission extends StatefulWidget {
   @override
@@ -15,56 +15,58 @@ class _AddCommissionState extends State<AddCommission> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    // Define padding and spacing based on screen height
+    double padding = screenHeight * 0.02; // 2% of screen height
+    double spacing = screenHeight * 0.015; // 1.5% of screen height
 
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TopBar(
-                title: 'Add Commission',
+                title: 'Add Service',
                 onBackPressed: () {
                   Navigator.pop(context);
                 },
               ),
               Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.symmetric(horizontal: padding),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start, // Align items to the left
                   children: [
-                    // Side Heading
+                    SizedBox(height: spacing),
                     Text(
                       "Set Commission Rates",
                       style: TextStyle(
-                        fontSize: 18,
+                        fontSize: screenHeight * 0.025, // Responsive font size
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 8),
-                    // Descriptive Text
+                    SizedBox(height: spacing),
                     Text(
                       "Manage commission rates for services and vendors",
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: screenHeight * 0.018, // Responsive font size
                         color: Colors.grey[700],
                       ),
                     ),
-                    SizedBox(height: 20),
-                    // Side Heading for Service/Vendor
+                    SizedBox(height: spacing * 2),
                     Text(
                       "Service/Vendor",
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: screenHeight * 0.022, // Responsive font size
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 8),
-                    // Dropdown for Service/Vendor
+                    SizedBox(height: spacing),
                     DropdownButtonFormField<String>(
                       decoration: InputDecoration(
                         labelText: 'Service',
-                        hintText: 'Enter Service',
+                        hintText: 'Select Service/Vendor',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12.0),
                         ),
@@ -97,17 +99,15 @@ class _AddCommissionState extends State<AddCommission> {
                         });
                       },
                     ),
-                    SizedBox(height: 20),
-                    // Side Heading for Commission Rate
+                    SizedBox(height: spacing * 2),
                     Text(
                       "Commission Rate",
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: screenHeight * 0.022, // Responsive font size
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(height: 8),
-                    // Commission Rate TextField with percentage symbol outside
+                    SizedBox(height: spacing),
                     Row(
                       children: [
                         Expanded(
@@ -131,25 +131,25 @@ class _AddCommissionState extends State<AddCommission> {
                               ),
                             ),
                             keyboardType: TextInputType.number,
-                            // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           ),
                         ),
-                        SizedBox(width: 5),
+                        SizedBox(
+                            width: screenWidth * 0.02), // Increased spacing
                         Text(
                           "%",
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize:
+                                screenHeight * 0.022, // Responsive font size
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
-                    // Save Commission Button
+                    SizedBox(height: spacing * 2),
                     CustomButton(
                       text: 'Save Commission',
                       color: const Color(0xFF2A9D8F),
-                      screenWidth: screenWidth,
+                      screenWidth: screenWidth, // Pass screenWidth for button
                       onTap: () {
                         // Handle save action here
                       },

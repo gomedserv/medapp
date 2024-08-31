@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gomedserv/widgets/bottomnavigation.dart';
 import 'package:gomedserv/service_management/add_service.dart';
-import 'package:gomedserv/user_management/manageusers_screen.dart';
 import 'package:gomedserv/widgets/topbar.dart';
+import 'package:gomedserv/models/manage_users_model.dart';
 
 class ManageServices extends StatefulWidget {
   @override
@@ -14,12 +14,16 @@ class _ManageServicesState extends State<ManageServices> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final paddingScale = screenWidth * 0.04; // Example: 4% of screen width
+    final spacingScale = screenHeight * 0.01; // Example: 2% of screen height
+    final buttonHeight = screenHeight * 0.06; // Example: 6% of screen height
+
     final filteredUsers = usersData
         .where((user) =>
             user.username?.toLowerCase().contains(searchQuery.toLowerCase()) ??
-            false ||
-                // user.email?.toLowerCase().contains(searchQuery.toLowerCase()) ??
-                false)
+            false)
         .toList();
 
     return SafeArea(
@@ -33,20 +37,21 @@ class _ManageServicesState extends State<ManageServices> {
                   Navigator.pop(context);
                 },
               ),
-              SizedBox(height: 5),
-              _buildSearchBar(),
-              SizedBox(height: 2), // Space between search bar and row
-              _buildUserListRow(context),
+              SizedBox(height: spacingScale),
+              _buildSearchBar(paddingScale),
+              SizedBox(height: spacingScale),
+              _buildUserListRow(context, paddingScale),
               if (filteredUsers.isEmpty)
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(paddingScale),
                   child: Text(
                     'No users found.',
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                    style: TextStyle(
+                        fontSize: screenWidth * 0.04, color: Colors.grey),
                   ),
                 )
               else
-                _buildUserList(filteredUsers),
+                _buildUserList(filteredUsers, screenHeight),
             ],
           ),
         ),
@@ -60,9 +65,9 @@ class _ManageServicesState extends State<ManageServices> {
     );
   }
 
-  Widget _buildUserListRow(BuildContext context) {
+  Widget _buildUserListRow(BuildContext context, double paddingScale) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: EdgeInsets.symmetric(horizontal: paddingScale),
       child: Row(
         children: [
           const Text(
@@ -89,19 +94,10 @@ class _ManageServicesState extends State<ManageServices> {
               ),
             ),
           ),
-          const SizedBox(width: 16), // Add some spacing between the buttons
+          SizedBox(
+              width: paddingScale * 0.4), // Responsive spacing between buttons
           GestureDetector(
-            onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => AvailabilityField(
-              //       onDateChanged: (DateTime value) {},
-              //       initialDate: DateTime.now(),
-              //     ),
-              //   ),
-              // );
-            },
+            onTap: () {},
             child: const Text(
               "Edit",
               style: TextStyle(
@@ -109,7 +105,8 @@ class _ManageServicesState extends State<ManageServices> {
               ),
             ),
           ),
-          const SizedBox(width: 16), // Add some spacing between the buttons
+          SizedBox(
+              width: paddingScale * 0.4), // Responsive spacing between buttons
           GestureDetector(
             onTap: () {},
             child: const Text(
@@ -124,9 +121,9 @@ class _ManageServicesState extends State<ManageServices> {
     );
   }
 
-  Widget _buildSearchBar() {
+  Widget _buildSearchBar(double paddingScale) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(paddingScale),
       child: TextField(
         onChanged: (query) {
           setState(() {
@@ -147,9 +144,10 @@ class _ManageServicesState extends State<ManageServices> {
     );
   }
 
-  Widget _buildUserList(List<User> users) {
+  Widget _buildUserList(List<User> users, double screenHeight) {
     return Container(
-      height: 500, // Adjust the height as per your need
+      height: screenHeight *
+          0.6, // Adjust the height as per your need (e.g., 70% of screen height)
       child: ListView.builder(
         padding: EdgeInsets.zero,
         itemCount: users.length,
@@ -165,9 +163,10 @@ class _ManageServicesState extends State<ManageServices> {
             child: ListTile(
               title: Text(
                 "${user.username ?? "No Name"}",
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.black,
-                  fontSize: 18,
+                  fontSize: screenHeight *
+                      0.025, // Font size relative to screen height
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -183,9 +182,10 @@ class _ManageServicesState extends State<ManageServices> {
                     "${user.date ?? "No Date"}",
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.black,
-                      fontSize: 14,
+                      fontSize: screenHeight *
+                          0.02, // Font size relative to screen height
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -202,7 +202,8 @@ class _ManageServicesState extends State<ManageServices> {
                     style: TextStyle(
                       color:
                           user.status == 'Active' ? Colors.green : Colors.red,
-                      fontSize: 14,
+                      fontSize: screenHeight *
+                          0.02, // Font size relative to screen height
                       fontWeight: FontWeight.bold,
                     ),
                   ),

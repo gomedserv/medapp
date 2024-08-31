@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gomedserv/home/dashboard_screen.dart';
-import 'package:gomedserv/login.dart';
 
 void main() {
   runApp(const MyApp());

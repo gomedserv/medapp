@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gomedserv/widgets/bottomnavigation.dart';
-import 'package:gomedserv/user_management/manageusers_screen.dart';
 import 'package:gomedserv/vendor_management/add_vendor.dart';
 import 'package:gomedserv/widgets/topbar.dart';
+import 'package:gomedserv/models/manage_users_model.dart';
 
 class VendorList extends StatefulWidget {
   @override
@@ -14,6 +14,18 @@ class _VendorListState extends State<VendorList> {
 
   @override
   Widget build(BuildContext context) {
+    // Get the screen width and height
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    // Define padding and spacing based on screen height
+    double padding = screenHeight * 0.02; // 2% of screen height
+    double spacing = screenHeight * 0.015; // 1.5% of screen height
+
+    // Define the max height for the user list based on screen height
+    double userListHeight = screenHeight * 0.6; // 50% of screen height
+
+    // Filter users based on search query
     final filteredUsers = usersData
         .where((user) =>
             user.username?.toLowerCase().contains(searchQuery.toLowerCase()) ??
@@ -33,20 +45,23 @@ class _VendorListState extends State<VendorList> {
                   Navigator.pop(context);
                 },
               ),
-              SizedBox(height: 5),
+              // SizedBox(height: padding),
               _buildSearchBar(),
-              SizedBox(height: 2), // Space between search bar and row
+              // SizedBox(height: spacing), // Space between search bar and row
               _buildUserListRow(context),
               if (filteredUsers.isEmpty)
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(padding),
                   child: Text(
                     'No users found.',
                     style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 )
               else
-                _buildUserList(filteredUsers),
+                Container(
+                  height: userListHeight,
+                  child: _buildUserList(filteredUsers),
+                ),
             ],
           ),
         ),
@@ -62,7 +77,8 @@ class _VendorListState extends State<VendorList> {
 
   Widget _buildUserListRow(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+      padding: EdgeInsets.symmetric(
+          horizontal: 0.02 * MediaQuery.of(context).size.width),
       child: Row(
         children: [
           const Text(
@@ -87,7 +103,7 @@ class _VendorListState extends State<VendorList> {
               ),
             ),
           ),
-          const SizedBox(width: 5), // Add some spacing between the buttons
+          const SizedBox(width: 10), // Add some spacing between the buttons
           GestureDetector(
             onTap: () {},
             child: const Text(
@@ -97,7 +113,7 @@ class _VendorListState extends State<VendorList> {
               ),
             ),
           ),
-          const SizedBox(width: 5), // Add some spacing between the buttons
+          const SizedBox(width: 10), // Add some spacing between the buttons
           GestureDetector(
             onTap: () {},
             child: const Text(
@@ -107,7 +123,7 @@ class _VendorListState extends State<VendorList> {
               ),
             ),
           ),
-          const SizedBox(width: 5), // Add some spacing between the buttons
+          const SizedBox(width: 10), // Add some spacing between the buttons
           GestureDetector(
             onTap: () {},
             child: const Text(
@@ -124,7 +140,7 @@ class _VendorListState extends State<VendorList> {
 
   Widget _buildSearchBar() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(0.02 * MediaQuery.of(context).size.height),
       child: TextField(
         onChanged: (query) {
           setState(() {
@@ -146,76 +162,68 @@ class _VendorListState extends State<VendorList> {
   }
 
   Widget _buildUserList(List<User> users) {
-    return Container(
-      height: 500, // Adjust the height as per your need
-      child: ListView.builder(
-        padding: EdgeInsets.zero,
-        itemCount: users.length,
-        itemBuilder: (context, index) {
-          final user = users[index];
-          return Card(
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
+    return ListView.builder(
+      padding: EdgeInsets.zero,
+      itemCount: users.length,
+      itemBuilder: (context, index) {
+        final user = users[index];
+        return Card(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          elevation: 4,
+          child: ListTile(
+            title: Text(
+              "${user.username ?? "No Name"}",
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            elevation: 4,
-            margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
-            child: ListTile(
-              title: Text(
-                "${user.username ?? "No Name"}",
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${user.email ?? "No Email"}",
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "${user.email ?? "No Email"}",
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                Text(
+                  "${user.date ?? "No Date"}",
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Text(
-                    "${user.date ?? "No Date"}",
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              trailing: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    "${user.status ?? "Active"}",
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: TextStyle(
-                      color:
-                          user.status == 'Active' ? Colors.green : Colors.red,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              onTap: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => AddVendor()),
-                // );
-              },
+                ),
+              ],
             ),
-          );
-        },
-      ),
+            trailing: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "${user.status ?? "Active"}",
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: TextStyle(
+                    color: user.status == 'Active' ? Colors.green : Colors.red,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            onTap: () {
+              // Handle tap action
+            },
+          ),
+        );
+      },
     );
   }
 }

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gomedserv/widgets/bottomnavigation.dart';
 import 'package:gomedserv/booking_management/add_commission.dart';
-import 'package:gomedserv/service_management/add_service.dart';
-import 'package:gomedserv/user_management/manageusers_screen.dart';
 import 'package:gomedserv/widgets/topbar.dart';
+import 'package:gomedserv/models/manage_users_model.dart';
 
 class BookingManagement extends StatefulWidget {
   const BookingManagement({super.key});
@@ -13,18 +12,25 @@ class BookingManagement extends StatefulWidget {
 }
 
 class _BookingManagementState extends State<BookingManagement> {
-  @override
   String searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
+
+    // Define padding and height based on screen dimensions
+    final double paddingHorizontal = screenWidth * 0.04; // 4% of screen width
+    final double topBarHeight = screenHeight * 0.07; // 7% of screen height
+    final double searchBarHeight = screenHeight * 0.06; // 6% of screen height
+    final double listHeight = screenHeight * 0.6; // 60% of screen height
+
     final filteredUsers = usersData
         .where((user) =>
             user.username?.toLowerCase().contains(searchQuery.toLowerCase()) ??
-            false ||
-                // user.email?.toLowerCase().contains(searchQuery.toLowerCase()) ??
-                false)
+            false)
         .toList();
+
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -36,20 +42,22 @@ class _BookingManagementState extends State<BookingManagement> {
                   Navigator.pop(context);
                 },
               ),
-              SizedBox(height: 5),
-              _buildSearchBar(),
-              SizedBox(height: 2), // Space between search bar and row
-              _buildUserListRow(context),
+              SizedBox(height: screenHeight * 0.01), // 1% of screen height
+              _buildSearchBar(paddingHorizontal, searchBarHeight),
+              SizedBox(height: screenHeight * 0.01), // 1% of screen height
+              _buildUserListRow(context, paddingHorizontal),
               if (filteredUsers.isEmpty)
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding:
+                      EdgeInsets.all(screenWidth * 0.04), // 4% of screen width
                   child: Text(
                     'No users found.',
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                    style: TextStyle(
+                        fontSize: screenHeight * 0.02, color: Colors.grey),
                   ),
                 )
               else
-                _buildUserList(filteredUsers),
+                _buildUserList(filteredUsers, listHeight),
             ],
           ),
         ),
@@ -63,9 +71,9 @@ class _BookingManagementState extends State<BookingManagement> {
     );
   }
 
-  Widget _buildUserListRow(BuildContext context) {
+  Widget _buildUserListRow(BuildContext context, double paddingHorizontal) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      padding: EdgeInsets.symmetric(horizontal: paddingHorizontal),
       child: Row(
         children: [
           const Text(
@@ -92,7 +100,7 @@ class _BookingManagementState extends State<BookingManagement> {
               ),
             ),
           ),
-          const SizedBox(width: 5), // Add some spacing between the buttons
+          SizedBox(width: paddingHorizontal * 0.1), // Add some spacing
           GestureDetector(
             onTap: () {},
             child: const Text(
@@ -102,7 +110,7 @@ class _BookingManagementState extends State<BookingManagement> {
               ),
             ),
           ),
-          const SizedBox(width: 5), // Add some spacing between the buttons
+          SizedBox(width: paddingHorizontal * 0.1), // Add some spacing
           GestureDetector(
             onTap: () {},
             child: const Text(
@@ -117,32 +125,35 @@ class _BookingManagementState extends State<BookingManagement> {
     );
   }
 
-  Widget _buildSearchBar() {
+  Widget _buildSearchBar(double paddingHorizontal, double searchBarHeight) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: TextField(
-        onChanged: (query) {
-          setState(() {
-            searchQuery = query;
-          });
-        },
-        decoration: InputDecoration(
-          hintText: 'Search by username or email',
-          suffixIcon: const Icon(
-            Icons.search,
-            size: 25,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+      padding: EdgeInsets.symmetric(horizontal: paddingHorizontal),
+      child: SizedBox(
+        height: searchBarHeight,
+        child: TextField(
+          onChanged: (query) {
+            setState(() {
+              searchQuery = query;
+            });
+          },
+          decoration: InputDecoration(
+            hintText: 'Search by username or email',
+            suffixIcon: const Icon(
+              Icons.search,
+              size: 25,
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildUserList(List<User> users) {
-    return Container(
-      height: 500, // Adjust the height as per your need
+  Widget _buildUserList(List<User> users, double listHeight) {
+    return SizedBox(
+      height: listHeight,
       child: ListView.builder(
         padding: EdgeInsets.zero,
         itemCount: users.length,
@@ -154,13 +165,16 @@ class _BookingManagementState extends State<BookingManagement> {
               borderRadius: BorderRadius.circular(8.0),
             ),
             elevation: 4,
-            margin: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 12.0),
+            margin: EdgeInsets.symmetric(
+              vertical: listHeight * 0.01, // 1% of list height
+              horizontal: listHeight * 0.02, // 2% of list height
+            ),
             child: ListTile(
               title: Text(
                 "${user.username ?? "No Name"}",
-                style: const TextStyle(
+                style: TextStyle(
                   color: Colors.black,
-                  fontSize: 18,
+                  fontSize: listHeight * 0.03, // Adjust based on list height
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -171,14 +185,19 @@ class _BookingManagementState extends State<BookingManagement> {
                     "${user.email ?? "No Email"}",
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
+                    style: TextStyle(
+                      fontSize:
+                          listHeight * 0.02, // Adjust based on list height
+                    ),
                   ),
                   Text(
                     "${user.date ?? "No Date"}",
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: Colors.black,
-                      fontSize: 14,
+                      fontSize:
+                          listHeight * 0.02, // Adjust based on list height
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -195,7 +214,8 @@ class _BookingManagementState extends State<BookingManagement> {
                     style: TextStyle(
                       color:
                           user.status == 'Active' ? Colors.green : Colors.red,
-                      fontSize: 14,
+                      fontSize:
+                          listHeight * 0.02, // Adjust based on list height
                       fontWeight: FontWeight.bold,
                     ),
                   ),

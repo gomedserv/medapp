@@ -20,16 +20,23 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   DateTime? _selectedDate;
 
   final List<String> _categories = [
-    'Plumbing',
-    'Electrical',
-    'Cleaning',
-    'Painting',
+    'Orthopedic Surgery',
+    'Pediatric Care',
+    'Dermatology',
+    'Orthopedic Surgery',
     'Gardening'
   ];
 
   @override
   Widget build(BuildContext context) {
+    // Fetch the screen width and height using MediaQuery
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
+    // Example scale factors for responsiveness
+    double paddingScale = screenWidth * 0.04;
+    double spacingScale = screenHeight * 0.02;
+    double buttonHeight = screenHeight * 0.06;
 
     return SafeArea(
       child: Scaffold(
@@ -42,11 +49,11 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                   Navigator.pop(context);
                 },
               ),
-              SizedBox(height: 20), // Add spacing after the TopBar
+              SizedBox(height: spacingScale), // Responsive spacing
               Form(
                 key: _formKey,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: EdgeInsets.symmetric(horizontal: paddingScale),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -76,7 +83,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: spacingScale),
 
                       DropdownButtonFormField<String>(
                         decoration: InputDecoration(
@@ -115,7 +122,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: spacingScale),
 
                       TextFormField(
                         controller: _descriptionController,
@@ -144,7 +151,7 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: spacingScale),
 
                       TextFormField(
                         controller: _priceController,
@@ -177,8 +184,11 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                         },
                       ),
 
-                      SizedBox(height: 20),
-                      Text('Availability'),
+                      SizedBox(height: spacingScale),
+                      Text(
+                        'Availability',
+                        style: TextStyle(color: Color(0xFF2A9D8F)),
+                      ),
                       Row(
                         children: [
                           Radio<String>(
@@ -211,37 +221,40 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
                             },
                           ),
                           Text('Weekends'),
-                          Radio<String>(
-                            value: 'Custom',
-                            groupValue: _selectedAvailability,
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedAvailability = value;
-                                _showDatePicker();
-                              });
-                            },
-                          ),
-                          Text('Custom'),
+                          // Radio<String>(
+                          //   value: 'Custom',
+                          //   groupValue: _selectedAvailability,
+                          //   onChanged: (value) {
+                          //     setState(() {
+                          //       _selectedAvailability = value;
+                          //       _showDatePicker();
+                          //     });
+                          //   },
+                          // ),
+                          // Text('Custom'),
                         ],
                       ),
                       if (_selectedDate != null)
                         Text(
                           'Selected Date: ${DateFormat('yyyy-MM-dd').format(_selectedDate!)}',
                         ),
+                      SizedBox(height: spacingScale),
                       ElevatedButton(
                         onPressed: _showDatePicker,
                         child: Text('Select Date'),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(double.infinity, buttonHeight),
+                        ),
                       ),
-                      SizedBox(height: 30), // Add spacing before the button
+                      SizedBox(
+                          height: spacingScale *
+                              1.5), // Larger spacing before the button
                       CustomButton(
                         text: 'Add Service',
                         color: const Color(0xFF2A9D8F),
                         screenWidth: screenWidth,
                         onTap: () {
                           if (_formKey.currentState!.validate()) {
-                            // Perform any additional logic here like API call to add the service
-
-                            // Show the dialog box after successfully adding the service
                             showDialog(
                               context: context,
                               builder: (BuildContext context) {
@@ -301,15 +314,15 @@ class _AddServiceScreenState extends State<AddServiceScreen> {
   }
 
   void _showDatePicker() async {
-    final DateTime? pickedDate = await showDatePicker(
+    DateTime? selectedDate = await showDatePicker(
       context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
+      initialDate: DateTime.now(),
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-    if (pickedDate != null && pickedDate != _selectedDate) {
+    if (selectedDate != null) {
       setState(() {
-        _selectedDate = pickedDate;
+        _selectedDate = selectedDate;
       });
     }
   }

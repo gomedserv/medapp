@@ -41,6 +41,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
       type: BottomNavigationBarType.fixed,
       backgroundColor: const Color(0xFF2A9D8F),
       selectedItemColor: Colors.white,
+      // currentIndex: _selectedIndex,
     );
   }
 }
